@@ -1,0 +1,141 @@
+<div class="app-layout">
+
+  <!-- Left Sidebar for Model Scores -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h2 class="sidebar-title">Model Scores</h2>
+      <div class="sidebar-note">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        <span>Scores update dynamically after every relevant/irrelevant document submission.</span>
+      </div>
+    </div>
+    
+    <ul class="score-list">
+      <li class="score-item" *ngFor="let algo of sortedAlgorithms()">
+        <span class="score-name">{{ algo.name.split(' ')[0] }}</span>
+        <span class="score-value">
+          {{ modelScores()[algo.id] !== undefined ? (modelScores()[algo.id] | number:'1.2-2') : '--' }}
+        </span>
+      </li>
+    </ul>
+  </aside>
+
+  <div class="search-container">
+    <div class="search-content">
+
+      <h1 class="floating-title">Search for a Document</h1>
+    <!-- <h1 class="floating-title">{{ titleText() }}</h1> -->
+
+    <div class="controls-wrapper">
+
+      <!-- Search input row -->
+      <div class="search-input-row" style="position: relative;">
+        <input
+          type="search"
+          class="search-box"
+          placeholder="Enter your search query..."
+          aria-label="Search"
+          [disabled]="isLoading()"
+          #searchBox
+          (input)="onInputChange(searchBox.value)"
+          (keyup.enter)="onSearch(searchBox.value)"
+        />
+        
+        <!-- Suggestions Dropdown (Up to 5 items) -->
+        <!-- Replace *ngIf and *ngFor with your logical variables when ready -->
+        <ul class="suggestions-dropdown" *ngIf="showSuggestions && suggestions().length > 0">
+          <li class="suggestion-item" *ngFor="let suggestion of suggestions()" (click)="onSuggestionSelect(suggestion, searchBox)">
+            <span class="suggestion-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </span>
+            <span class="suggestion-text">{{ suggestion }}</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Filters row -->
+      <div class="filters-container">
+        <div class="filter-group">
+          <label class="dropdown-label" for="algorithm-select">Algorithm</label>
+          <div class="select-wrapper">
+            <select id="algorithm-select" [(ngModel)]="selectedAlgorithm" class="custom-select">
+              <option *ngFor="let algo of algorithms" [value]="algo.id">
+                {{ algo.name }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <label class="dropdown-label" for="field-select">Search in</label>
+          <div class="select-wrapper">
+            <select id="field-select" [(ngModel)]="selectedField" class="custom-select">
+              <option *ngFor="let field of searchFields" [value]="field.id">
+                {{ field.name }}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Error Alert -->
+    <div class="error-alert" role="alert" *ngIf="showError()">
+      <div class="error-icon" aria-hidden="true">⚠️</div>
+      <div class="error-text">{{ errorMessage() }}</div>
+    </div>
+
+    <!-- Results -->
+    <section aria-label="Search results">
+      <article *ngFor="let result of results" class="results-box">
+        <div class="result-content">
+
+          <div class="result-left">
+            <a class="result-title" [href]="result.link" target="_blank" rel="noopener noreferrer">
+              {{ result.title }}
+            </a>
+            <p class="result-author">{{ result.author }}</p>
+            <p class="result-subtitle">{{ result.subtitle }}</p>
+            <p class="result-text">{{ result.text }}</p>
+            <p class="result-date">{{ result.date }}</p>
+
+            <!-- Relevance Feedback -->
+            <div class="relevance-feedback">
+              <span class="feedback-label">Is this tracking relevant?</span>
+              <button 
+                class="feedback-btn btn-relevant" 
+                [class.active]="result.isRelevant === true"
+                (click)="submitRelevance(result.id, true)"
+                aria-label="Mark as relevant">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>
+                Relevant
+              </button>
+              <button 
+                class="feedback-btn btn-irrelevant" 
+                [class.active]="result.isRelevant === false"
+                (click)="submitRelevance(result.id, false)"
+                aria-label="Mark as irrelevant">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-2"></path></svg>
+                Irrelevant
+              </button>
+            </div>
+          </div>
+
+          <div class="result-right" *ngIf="result.imageUrl">
+            <div class="result-image">
+              <img [src]="result.imageUrl" [alt]="result.title + ' preview'" loading="lazy" />
+              <p class="image-caption">Document preview</p>
+            </div>
+          </div>
+
+        </div>
+      </article>
+    </section>
+
+    </div>
+  </div>
+</div>
