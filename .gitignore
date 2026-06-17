@@ -1,0 +1,77 @@
+# ==========================================
+# Python
+# ==========================================
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environments
+.venv/
+venv/
+env/
+ENV/
+
+# Python Build Files
+build/
+dist/
+*.egg-info/
+
+# Jupyter Notebook Checkpoints
+.ipynb_checkpoints/
+
+# ==========================================
+# VS Code
+# ==========================================
+.vscode/
+
+# ==========================================
+# Environment Variables
+# ==========================================
+.env
+.env.*
+
+# ==========================================
+# Logs
+# ==========================================
+*.log
+
+# ==========================================
+# Cache Files
+# ==========================================
+.cache/
+*.cache
+
+# ==========================================
+# Angular / Node.js
+# ==========================================
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+
+# If Angular is at root instead:
+node_modules/
+dist/
+.angular/
+
+# ==========================================
+# Operating System Files
+# ==========================================
+.DS_Store
+Thumbs.db
+
+# ==========================================
+# Generated Model/Data Files
+# ==========================================
+elmo_cache.npy
+
+# Optional: ignore generated indexes
+# Uncomment if these can be recreated
+# index/
+# indexTitle/
+# indexSubTitle/
+
+# ==========================================
+# Temporary Files
+# ==========================================
+*.tmp
+*.temp
