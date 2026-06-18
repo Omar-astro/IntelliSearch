@@ -297,7 +297,7 @@ This project was built as a collaborative Information Retrieval project by Omar 
 | Contributor | Details | Main Work |
 | --- | --- | --- |
 | Omar Ashraf Mahmoud | Computer Science Major - Data Science & Artificial Intelligence (DSAI)<br>Zewail City of Science and Technology<br>Student ID: `202400725`<br>College Email: `s-omar.amahmoud@zewailcity.edu.eg`<br>Personal Email: `omar.ashraf.hamed2017@gmail.com` | Frontend, backend, data scraping, and part of the data cleaning pipeline. |
-| Ahmad Magdy | Computer Science Major - Data Science & Artificial Intelligence (DSAI)<br>Zewail City of Science and Technology<br>Student ID: `202400517`<br>College Email: `TBA`<br>Personal Email: `TBA` | Search models implementation and part of the data cleaning pipeline. |
+| Ahmad Magdy | Computer Science Major - Data Science & Artificial Intelligence (DSAI)<br>Zewail City of Science and Technology<br>Student ID: `202400517`<br>College Email: `s-ahmad.elmetwally@zewailcity.edu.eg`<br>Personal Email: `ahmadmagdy0x7@gmail.com` | Search models implementation and part of the data cleaning pipeline. |
 
 ---
 
